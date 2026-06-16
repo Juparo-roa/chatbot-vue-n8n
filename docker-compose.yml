@@ -1,0 +1,27 @@
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: chatbot-n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=earring-efficient-upstage.ngrok-free.dev
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://earring-efficient-upstage.ngrok-free.dev/
+      - N8N_PROXY_HOPS=1
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: chatbot-vue
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+
+volumes:
+  n8n_data:
