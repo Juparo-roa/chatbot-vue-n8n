@@ -1,6 +1,8 @@
+```vue
 <template>
   <main class="page">
     <section class="chat">
+      <!-- Encabezado -->
       <header class="chat-header">
         <div>
           <h1>Asistente Virtual Inteligente</h1>
@@ -12,13 +14,17 @@
         </span>
       </header>
 
+      <!-- Conversación -->
       <div ref="messagesContainer" class="messages">
         <div
           v-for="(msg, index) in messages"
           :key="index"
           :class="['message', msg.role]"
         >
-          <strong>{{ msg.role === 'user' ? 'Tú' : 'Asistente' }}</strong>
+          <strong>
+            {{ msg.role === 'user' ? 'Tú' : 'Asistente' }}
+          </strong>
+
           <div v-html="msg.text"></div>
         </div>
 
@@ -28,20 +34,27 @@
         </div>
       </div>
 
-      <form @submit.prevent="sendMessage" class="form">
+      <!-- Formulario -->
+      <form class="form" @submit.prevent="sendMessage">
         <input
           v-model="userMessage"
-          placeholder="Describe tu problema o pregunta..."
+          type="text"
+          placeholder="Escribe tu consulta..."
           :disabled="loading"
         />
 
         <button type="submit" :disabled="loading">
-          {{ loading ? 'Enviando...' : 'Enviar' }}
+          {{ loading ? "Enviando..." : "Enviar" }}
         </button>
       </form>
 
+      <!-- Botón limpiar -->
       <div class="actions">
-        <button class="secondary" @click="clearChat">
+        <button
+          class="secondary"
+          type="button"
+          @click="clearChat"
+        >
           Limpiar conversación
         </button>
       </div>
@@ -158,44 +171,69 @@ const clearChat = () => {
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f3f4f6;
+  background: #0f0f0f;
 }
-
 .page {
+  width: 100%;
   min-height: 100vh;
-  display: grid;
-  place-items: center;
-}
 
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  padding-right: 40px;
+  box-sizing: border-box;
+
+  background: transparent;
+}
 .chat {
-  width: 560px;
-  background: white;
-  padding: 24px;
-  border-radius: 18px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  width: 400px;
+  height: 600px;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #1a1a1a;
+  color: #fff;
+
+  border-radius: 16px;
+  border: 1px solid #2e2e2e;
+
+  padding: 16px;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .chat-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  background: #111111;
+  color: white;
+
+  padding: 16px;
+  border-radius: 12px;
 }
 
 .chat-header h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: 22px;
 }
 
 .chat-header p {
   margin: 6px 0 0;
-  color: #666;
+  font-size: 13px;
+  color: #b3b3b3;
 }
-
 .status {
   padding: 6px 10px;
   border-radius: 999px;
-  font-size: 12px;
+
+  background: #16a34a;
   color: white;
+
+  font-weight: bold;
 }
 
 .status.online {
@@ -207,20 +245,26 @@ body {
 }
 
 .messages {
-  height: 420px;
+  flex: 1;
   overflow-y: auto;
-  border: 1px solid #ddd;
-  padding: 16px;
-  border-radius: 14px;
-  margin: 18px 0;
-  background: #fafafa;
+
+  border: 1px solid #2e2e2e;
+  border-radius: 12px;
+
+  padding: 12px;
+  margin: 12px 0;
+
+  background: #181818;
 }
 
 .message {
   margin-bottom: 14px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  line-height: 1.4;
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 16px;
+  line-height: 1.5;
+  background: #2a2a2a;
+  color: #ffffff;
 }
 
 .message strong {
@@ -244,46 +288,71 @@ body {
 }
 
 .message pre {
-  background: #f4f4f4;
+  background: #111111;
+  color: #ffffff;
   padding: 10px;
   border-radius: 8px;
   overflow-x: auto;
 }
 
 .message code {
-  background: #f4f4f4;
+  background: #2d2d2d;
+  color: #60a5fa;
   padding: 2px 4px;
   border-radius: 4px;
 }
 
 .user {
-  background: #dbeafe;
-  text-align: right;
+  background: #2563eb;
+  color: white;
 }
 
 .bot {
-  background: #e5e7eb;
+  background: #2b2b2b;
+  color: white;
 }
 
 .form {
   display: flex;
-  gap: 10px;
+  gap: 8px;
+}
+
+.form input {
+  flex: 1;
+}
+
+.form button {
+  width: 70px;
+  flex-shrink: 0;
 }
 
 input {
   flex: 1;
-  padding: 12px;
-  border: 1px solid #aaa;
-  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: 10px;
+
+  background: #111111;
+  color: #ffffff;
+  
+}
+
+input::placeholder {
+  color: #888;
 }
 
 button {
-  padding: 12px 18px;
+  padding: 10px 16px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  background: #111827;
+  background: #2563eb;
   color: white;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: #1d4ed8;
 }
 
 button:disabled {
@@ -297,6 +366,12 @@ button:disabled {
 
 .secondary {
   width: 100%;
-  background: #ef4444;
+  background: #dc2626;
+  color: white;
+  transition: background 0.2s ease;
+}
+
+.secondary:hover {
+  background: #b91c1c;
 }
 </style>
