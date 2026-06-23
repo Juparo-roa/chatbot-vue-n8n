@@ -5,7 +5,7 @@
       <!-- Encabezado -->
       <header class="chat-header">
         <div>
-          <h1>Asistente Virtual Inteligente</h1>
+          <h1>AVI Rewdev</h1>
           <p>Soluciones guiadas con IA</p>
         </div>
 
@@ -16,11 +16,7 @@
 
       <!-- Conversación -->
       <div ref="messagesContainer" class="messages">
-        <div
-          v-for="(msg, index) in messages"
-          :key="index"
-          :class="['message', msg.role]"
-        >
+        <div v-for="(msg, index) in messages" :key="index" :class="['message', msg.role]">
           <strong>
             {{ msg.role === 'user' ? 'Tú' : 'Asistente' }}
           </strong>
@@ -36,12 +32,7 @@
 
       <!-- Formulario -->
       <form class="form" @submit.prevent="sendMessage">
-        <input
-          v-model="userMessage"
-          type="text"
-          placeholder="Escribe tu consulta..."
-          :disabled="loading"
-        />
+        <input v-model="userMessage" type="text" placeholder="Escribe tu consulta..." :disabled="loading" />
 
         <button type="submit" :disabled="loading">
           {{ loading ? "Enviando..." : "Enviar" }}
@@ -49,12 +40,8 @@
       </form>
 
       <!-- Botón limpiar -->
-      <div class="actions">
-        <button
-          class="secondary"
-          type="button"
-          @click="clearChat"
-        >
+      <div class="actions" v-if="messages.some(msg => msg.role === 'user')">
+        <button class="secondary" type="button" @click="clearChat">
           Limpiar conversación
         </button>
       </div>
@@ -107,22 +94,22 @@ const sendMessage = async () => {
   const timeout = setTimeout(() => controller.abort(), 30000)
 
   try {
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5678';
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5678';
 
-  console.log("API_URL:", API_URL);
-  
-  const response = await fetch(`${API_URL}/webhook/chatbot`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-    },
-  body: JSON.stringify({
-    message: text,
-    sessionId,
-    timestamp: new Date().toISOString()
-    }),
-  signal: controller.signal
-  });
+    console.log("API_URL:", API_URL);
+
+    const response = await fetch(`${API_URL}/webhook/chatbot`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: text,
+        sessionId,
+        timestamp: new Date().toISOString()
+      }),
+      signal: controller.signal
+    });
 
     clearTimeout(timeout)
 
@@ -173,6 +160,7 @@ body {
   font-family: Arial, sans-serif;
   background: #0f0f0f;
 }
+
 .page {
   width: 100%;
   min-height: 100vh;
@@ -186,22 +174,24 @@ body {
 
   background: transparent;
 }
+
 .chat {
-  width: 400px;
-  height: 600px;
+  
+  width: min(350px, calc(100vw - 24px));
+  height: min(500px, calc(100vh - 24px));
 
   display: flex;
   flex-direction: column;
 
   background: #1a1a1a;
-  color: #fff;
+  color: #ffffff;
 
+  padding: 12px;
   border-radius: 16px;
+
   border: 1px solid #2e2e2e;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 
-  padding: 16px;
-
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .chat-header {
@@ -212,20 +202,21 @@ body {
   background: #111111;
   color: white;
 
-  padding: 16px;
+  padding: 12px;
   border-radius: 12px;
 }
 
 .chat-header h1 {
   margin: 0;
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .chat-header p {
   margin: 6px 0 0;
-  font-size: 13px;
+  font-size: 12px;
   color: #b3b3b3;
 }
+
 .status {
   padding: 6px 10px;
   border-radius: 999px;
@@ -246,12 +237,13 @@ body {
 
 .messages {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
 
   border: 1px solid #2e2e2e;
   border-radius: 12px;
 
-  padding: 12px;
+  padding: 10px;
   margin: 12px 0;
 
   background: #181818;
@@ -259,8 +251,8 @@ body {
 
 .message {
   margin-bottom: 14px;
-  padding: 10px 12px;
-  font-size: 14px;
+  padding: 8px 10px;
+  font-size: 13px;
   border-radius: 16px;
   line-height: 1.5;
   background: #2a2a2a;
@@ -328,13 +320,13 @@ body {
 
 input {
   flex: 1;
-  padding: 10px;
+  padding: 8px 10px;
   border: 1px solid #333;
   border-radius: 10px;
 
   background: #111111;
   color: #ffffff;
-  
+
 }
 
 input::placeholder {
@@ -342,7 +334,7 @@ input::placeholder {
 }
 
 button {
-  padding: 10px 16px;
+  padding: 8px 12px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
